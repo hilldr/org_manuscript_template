@@ -1,0 +1,135 @@
+# BioRxiv formatted manuscript
+#+EXCLUDE_TAGS: noexport
+#+OPTIONS: tex:t
+#+OPTIONS: toc:nil
+#+OPTIONS: H:3 num:0
+#+STARTUP: overview
+#+STARTUP: hideblocks
+#+NAME: pdf_metadata
+#+begin_src sh :tangle report.txt :results silent :exports none :eval no
+InfoKey: Title
+InfoValue: Draft manuscript
+InfoKey: Author
+InfoValue: David R. Hill
+InfoKey: Subject
+InfoValue: BioRxiv
+#+end_src
+#+NAME: latex-class-setup
+#+begin_src emacs-lisp :results silent :exports none :eval yes
+;; latex header for nih grant format
+(unless (find "biorxiv" org-latex-classes :key 'car
+          :test 'equal)
+	 (add-to-list 'org-latex-classes
+	  '("biorxiv" 
+  "\\documentclass[12pt,notitlepage]{article}
+  [NO-DEFAULT-PACKAGES]
+  [EXTRA]"
+  ("\\section{%s}" . "\\section*{%s}")
+  ("\\subsection{%s}" . "\\subsection*{%s}")
+  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+  )
+)
+#+end_src
+#+CALL: latex-class-setup()
+#+LATEX_CLASS: biorxiv
+#+LATEX_HEADER: \input{header.tex}
+#+LATEX_HEADER: \usepackage{lineno}
+#+LATEX_CLASS_OPTIONS: [11pt]
+#+begin_src latex
+% title goes here:
+\begin{flushleft}
+{\huge
+  \textbf{
+    \newline{The title of the manuscript goes here}
+    }
+  }
+\newline
+% authors go here:
+\\
+David R. Hill\textsuperscript{1,*},
+Author 2\textsuperscript{2},
+Author 3\textsuperscript{1},
+Author 4\textsuperscript{1},
+Author 5\textsuperscript{2},
+Author 6\textsuperscript{2},
+Author 7\textsuperscript{1,*}
+\\
+\bigskip
+1 Division of Gastroeneterology and Hepatology, Department of Internal Medicine, University of Michigan
+\\
+2 Affiliation B
+\\
+\bigskip
+$\ast$ Corresponding author: hilldr@med.umich.edu
+
+\end{flushleft}
+#+end_src
+* Abstract
+Abstract text. \lipsum[4]
+* Introduction
+In the introduction, I will in all likelihood need to cite this paper \cite{Hill:2017}. \lipsum
+* Materials and Methods
+** Cell Culture  
+Here I discuss how I grew the cells. \lipsum[2]
+** Statistical analysis
+A P-value of < 0.05 was considered statistically significant. \lipsum[3]
+* Results    
+** Figure 1 Standard floating figure
+Say something interesting about the figure. \lipsum[1-2]
+#+begin_src latex
+\begin{figure}[ht] % state preferences regarding figure placement (here, top-of-page)
+% use to correct figure counter if necessary
+%\renewcommand{\thefigure}{2}
+  %\centering
+  \includegraphics[width=0.5\textwidth]{test.png}
+  
+  \caption{\color{Gray} \textbf{A-F}, This figure is wrapped into the standard floating environment.}
+  \label{fig2} % \label works only AFTER \caption within figure environment
+
+\end{figure}
+#+end_src
+
+** Figure 2 Example of a wide figure
+#+begin_src latex
+\vspace{.5cm} % set vertical space between text and figure
+\begin{adjustwidth}{-2.25in}{0in}
+
+\includegraphics[width=163mm]{test2.png}
+
+\justify 
+\color{Gray}
+% do not use '\caption outside of a float
+\small{
+  \textbf {Figure 2. Example of a wide figure with multi-page caption.}
+  \textbf{A}, Start junk text here: Proin lectus ex, venenatis vel ornare eget, hendrerit tempus justo. Pellentesque molestie purus sed pretium tincidunt. Curabitur facilisis, orci vitae mollis fringilla, elit erat fermentum justo, nec luctus nunc sapien vel dolor. Cras enim justo, ullamcorper ut commodo at, posuere et ex. Fusce cursus sapien id augue maximus convallis. Praesent egestas massa in enim volutpat varius. In aliquam turpis urna, at elementum turpis eleifend at. \textbf{B}, Proin risus erat, tincidunt quis massa non, sollicitudin congue metus. Aliquam quis magna vulputate, posuere est eu, tempor nisi. Cras gravida tempus felis, vitae lacinia lacus volutpat quis. Pellentesque et eros eu mi suscipit tempus. Proin in augue scelerisque. \textbf{C}, Donec a tempor tortor, et dignissim enim. Cras in ipsum sed velit bibendum imperdiet. Aenean aliquet mauris maximus, sodales ligula sit amet, placerat felis. In tristique nisi eu risus rutrum, ac lacinia lorem cursus. Nunc eget condimentum purus. Maecenas imperdiet nisl eu accumsan gravida. \textbf{D}, Nullam tincidunt, magna sed auctor ultrices, leo mi eleifend velit, quis varius ex diam non tellus. Nam tincidunt vehicula turpis, ut euismod turpis elementum vel.
+}
+\end{adjustwidth}
+#+end_src
+
+Resume Results section. \lipsum[6]
+* Discussion
+Summarize the results in the context of existing literature. \lipsum
+
+#+begin_src latex
+\let\oldbibliography\thebibliography
+\renewcommand{\thebibliography}[1]{\oldbibliography{#1}
+  \setlength{\itemsep}{-1pt}} % Reducing spacing in the bibliography.
+\footnotesize{ % https://www.sharelatex.com/learn/Font_sizes,_families,_and_styles#Reference_guide
+  \bibliography{bibliography.bib} 
+  \bibliographystyle{nihunsrt} % Use the custom nihunsrt bibliography style included with the template
+}\normalsize
+#+end_src
+
+* Local Variables :noexport:
+# Local Variables:
+# mode: org
+# word-wrap: t
+# truncate-lines: nil
+# reftex-default-bibliography: ("bibliography.bib")
+# reftex-cite-format: "\\cite{%l}"
+# org-latex-with-hyperref: nil
+# org-latex-title-command: nil
+# ispell-dictionary: "american"
+# End:
